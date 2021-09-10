@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:receitasapp/models/meal.dart';
+import 'package:receitasapp/utils/app_routes.dart';
 
 class MealItem extends StatelessWidget {
   final Meal meal;
 
   const MealItem(this.meal);
 
-  void _selectedMeal() {}
+  void _selectedMeal(BuildContext context) {
+    Navigator.of(context)
+        .pushNamed(
+      AppRoutes.MEAL_DETAIL,
+      arguments: meal,
+    )
+        .then((result) {
+      if (result == null) {
+        print('Sem Resultado');
+      } else {
+        print('O nome da refeição é $result');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: _selectedMeal,
+      onTap: () => _selectedMeal(context),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
@@ -34,24 +48,57 @@ class MealItem extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                Container(
-                  width: 300,
-                  color: Colors.black54,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 20,
-                  ),
-                  child: Text(
-                    meal.title.toString(),
-                    style: TextStyle(
-                      fontSize: 26,
-                      color: Colors.white,
+                Positioned(
+                  right: 10,
+                  bottom: 20,
+                  child: Container(
+                    width: 300,
+                    color: Colors.black54,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 20,
                     ),
-                    softWrap: true,
-                    overflow: TextOverflow.fade,
+                    child: Text(
+                      meal.title.toString(),
+                      style: TextStyle(
+                        fontSize: 26,
+                        color: Colors.white,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.fade,
+                    ),
                   ),
                 ),
               ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.schedule),
+                      const SizedBox(width: 6),
+                      Text('${meal.duration} min'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.work),
+                      const SizedBox(width: 6),
+                      Text(meal.complexityText),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.attach_money),
+                      const SizedBox(width: 6),
+                      Text(meal.costText),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
